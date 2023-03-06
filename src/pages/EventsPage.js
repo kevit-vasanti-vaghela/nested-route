@@ -12,6 +12,7 @@ function EventsPage() {
 
 
 export default EventsPage;
+
 // separate loader funciton then added as value to loader property of route definition of page.
 export async function loader () {
   const response = await fetch('http://localhost:8080/events');
