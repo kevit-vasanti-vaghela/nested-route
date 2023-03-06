@@ -20,7 +20,7 @@ export default EventsPage;
 
 // separate loader funciton then added as value to loader property of route definition of page.
 export async function loader () {
-  const response = await fetch('http://localhost:8080/eventss');
+  const response = await fetch('http://localhost:8080/events');
 
               if (!response.ok) {
                 // return { isError: true, message: 'Could not fetch data.' }
