@@ -1,11 +1,11 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import EventNavigation from './EventNavigation'
+import EventsNavigation from '../components/EventsNavigation'
 
 const EventRootPage = () => {
   return (
     <div>
-        <EventNavigation />
+        <EventsNavigation />
         <Outlet />
     </div>
   )
