@@ -1,3 +1,4 @@
+import { useEffect, useState} from 'react';
 import { 
   useNavigate, 
   Form, 
@@ -10,17 +11,53 @@ import {
 import classes from './EventForm.module.css';
 
 function EventForm({ method, event }) {
+  const [title,setTitle] = useState('')
+  const [image,setImage] = useState('')
+  const [date,setDate] = useState('')
+  const [des,setDes] = useState('')
   const data = useActionData();
-  const navigate = useNavigate();
   const navigation = useNavigation();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    let t = localStorage.getItem('title')
+    let i = localStorage.getItem('image')
+    let da = localStorage.getItem('date')
+    let de = localStorage.getItem('description')
+    setTitle(t)
+    setImage(i)
+    setDate(da)
+    setDes(de)
+  },[title,image,date,des])
+
+  const titleChangeHandler = (e) => {
+    setTitle(e.target.value)
+    localStorage.setItem('title', e.target.value)
+  }
+
+  const imageChangeHandler = (e) => {
+    setImage(e.target.value)
+    localStorage.setItem('image', e.target.value)
+  }
+
+  const dateChangeHandler = (e) => {
+    setDate(e.target.value)
+    localStorage.setItem('date', e.target.value)
+  }
+
+  const desChangeHandler = (e) => {
+    setDes(e.target.value)
+    localStorage.setItem('description', e.target.value)
+  }
+  
+  
   const isSubmitting = navigation.state === 'submitting';
   function cancelHandler() {
     navigate('..');
   }
 
   return (
-    <Form method={method} className={classes.form}>
+    <Form method={method} className={classes.form} >
       {data && data.errors && (
         <ul>
           {Object.values(data.errors).map((err) => (
@@ -35,7 +72,8 @@ function EventForm({ method, event }) {
           type="text" 
           name="title" 
           required 
-          defaultValue={event ? event.title : ''}
+          onChange={titleChangeHandler}
+          defaultValue={event ? event.title : title}
         />
       </p>
       <p>
@@ -45,7 +83,8 @@ function EventForm({ method, event }) {
           type="url" 
           name="image" 
           required
-          defaultValue={event ? event.image : ''} 
+          onChange={imageChangeHandler}
+          defaultValue={event ? event.image : image} 
         />
       </p>
       <p>
@@ -55,7 +94,8 @@ function EventForm({ method, event }) {
           type="date" 
           name="date" 
           required 
-          defaultValue={event ? event.date : ''}
+          onChange={dateChangeHandler}
+          defaultValue={event ? event.date : date}
         />
       </p>
       <p>
@@ -65,7 +105,8 @@ function EventForm({ method, event }) {
           name="description" 
           rows="5" 
           required 
-          defaultValue={event ? event.description : ''}
+          onChange={desChangeHandler}
+          defaultValue={event ? event.description :des}
         />
       </p>
       <div className={classes.actions}>
@@ -81,6 +122,7 @@ function EventForm({ method, event }) {
 export default EventForm;
 
 export async function action({request, params}) {
+  localStorage.clear();
   const method = request.method;
   const data = await request.formData();
 
@@ -93,7 +135,7 @@ export async function action({request, params}) {
 
   let url = 'http://localhost:8080/events';
 
-  if (method == 'PATCH') {
+  if (method === 'PATCH') {
     const eventId = params.eventId;
     url = 'http://localhost:8080/events/' + eventId;
   }
